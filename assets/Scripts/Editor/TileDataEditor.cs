@@ -1,5 +1,4 @@
 using Core.ScriptableObjects;
-using Editor.EditorWindows;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,31 +22,14 @@ namespace Editor
             serializedObject.Update();
             TileData tileData = (TileData)target;
 
-            // Ensure tileData has a valid color pool reference
-            if (tileData.colorPool == null)
-            {
-                EditorGUILayout.HelpBox("Color Pool is not set.", MessageType.Warning);
-            }
-
-            // Draw the default inspector for other fields
-            // DrawDefaultInspector();
-
+            // Draw the basic fields
             EditorGUILayout.PropertyField(_colorPoolProperty);
             EditorGUILayout.PropertyField(_gridSizeProperty);
 
-            // Draw the grid
-            int gridSize = tileData.gridSize;
-            for (int y = 0; y < gridSize; y++)
-            {
-                EditorGUILayout.BeginHorizontal();
-                for (int x = 0; x < gridSize; x++)
-                {
-                    DrawCell(x, y, tileData);
-                }
+            DrawColorGrid(tileData);
 
-                EditorGUILayout.EndHorizontal();
-            }
-            
+            DrawColorPalette(tileData);
+
             // Add a button for randomizing colors
             if (GUILayout.Button("Randomize Colors"))
             {
@@ -55,6 +37,57 @@ namespace Editor
             }
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawColorGrid(TileData tileData)
+        {
+            GUI.backgroundColor = Color.white; // Reset background color
+            // Draw the grid
+            int gridSize = tileData.gridSize;
+            for (int y = 0; y < gridSize; y++)
+            {
+                EditorGUILayout.BeginHorizontal();
+                for (int x = 0; x < gridSize; x++)
+                {
+                    int index = y * gridSize + x;
+                    if (index < tileData.colors.Length)
+                    {
+                        GUI.backgroundColor = tileData.colors[index];
+                        if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
+                        {
+                            tileData.colors[index] = _selectedColor;
+                            EditorUtility.SetDirty(target); // Mark object as dirty to ensure changes are saved
+                        }
+                    }
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        private void DrawColorPalette(TileData tileData)
+        {
+            // Ensure tileData has a valid color pool reference
+            if (tileData.colorPool != null)
+            {
+                GUI.backgroundColor = Color.white; // Reset background color
+                EditorGUILayout.LabelField("Color Palette:");
+                EditorGUILayout.BeginHorizontal();
+                foreach (var color in tileData.colorPool.colors)
+                {
+                    GUI.backgroundColor = color;
+                    if (GUILayout.Button("", GUILayout.Width(25), GUILayout.Height(25)))
+                    {
+                        _selectedColor = color;
+                    }
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("Color Pool is not set.", MessageType.Warning);
+            }
         }
 
         private void RandomizeTileColors(TileData tileData)
@@ -69,22 +102,6 @@ namespace Editor
                 }
 
                 EditorUtility.SetDirty(tileData); // Mark the TileData as dirty to ensure changes are saved
-            }
-        }
-
-        private void DrawCell(int x, int y, TileData tileData)
-        {
-            int index = y * tileData.gridSize + x;
-            var color = tileData.colors[index];
-
-            // Set button background color
-            GUI.backgroundColor = color;
-
-            // Create a button for each cell
-            if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
-            {
-                // Open color picker when cell is clicked
-                ColorPickerWindow.Open(tileData, index);
             }
         }
     }

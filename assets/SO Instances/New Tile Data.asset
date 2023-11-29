@@ -12,8 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9091584e4514d10bf78708fbcd851c, type: 3}
   m_Name: New Tile Data
   m_EditorClassIdentifier: 
-  colorPool: {fileID: 0}
-  gridSize: 0
-  colors: []
+  colorPool: {fileID: 11400000, guid: 4e6160de48e3f4b479a89eeb58c3ae9c, type: 2}
+  gridSize: 5
+  colors:
+  - {r: 0.764151, g: 0.726785, b: 0.16941082, a: 1}
+  - {r: 0.6226415, g: 0.18503025, b: 0.18503025, a: 1}
+  - {r: 0.18160377, g: 0.6338145, b: 0.7264151, a: 1}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.764151, g: 0.726785, b: 0.16941082, a: 1}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
   currentRotation: 0
   baseRotation: 0
