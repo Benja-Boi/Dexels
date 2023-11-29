@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Core.ScriptableObjects
@@ -6,16 +7,35 @@ namespace Core.ScriptableObjects
     public class TileData : ScriptableObject
     {
         public ColorPool colorPool; // Reference to a color pool
-        public int gridSize = 3; // Default to 3x3, can be changed in Inspector
+        public int gridSize; // Default to 3x3, can be changed in Inspector
         public Color[] colors; // Flat array to represent grid colors
         public RotationState currentRotation; // Rotation state of the tile
         public RotationState baseRotation = RotationState.Up; // Rotation state of the tile
 
         private void OnValidate()
         {
+            Debug.Log("On Validate");
+            Debug.Log("Colors length: " + colors.Length);
+            Debug.Log("Grid Size: " + gridSize);
+            
             if (colors == null || colors.Length != gridSize * gridSize)
             {
-                colors = new Color[gridSize * gridSize];
+                Debug.Log("Updated grid size");
+                UpdateGridSize();
+            }
+        }
+
+        private void UpdateGridSize()
+        {
+            var oldColors = colors;
+            colors = new Color[gridSize * gridSize];
+            
+            var colorsLength = (int) Math.Sqrt(colors.Length);
+            var minGridSize = colorsLength < gridSize ? colorsLength : gridSize;
+            
+            for (int i=0; i<minGridSize*minGridSize; i++)
+            {
+                colors[i] = oldColors[i];
             }
         }
     }

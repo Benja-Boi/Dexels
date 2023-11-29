@@ -10,6 +10,7 @@ namespace Editor
     {
         private SerializedProperty _colorPoolProperty;
         private SerializedProperty _gridSizeProperty;
+        private Color _selectedColor;
 
         private void OnEnable()
         {
@@ -19,6 +20,7 @@ namespace Editor
 
         public override void OnInspectorGUI()
         {
+            serializedObject.Update();
             TileData tileData = (TileData)target;
 
             // Ensure tileData has a valid color pool reference
@@ -51,6 +53,8 @@ namespace Editor
             {
                 RandomizeTileColors(tileData);
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void RandomizeTileColors(TileData tileData)

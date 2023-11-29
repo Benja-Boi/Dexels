@@ -3,7 +3,7 @@ using System.Collections;
 using Core;
 using Core.ScriptableObjects;
 
-public class TileRotator : MonoBehaviour, ITileDataObserver
+public class TileRotator : MonoBehaviour, ITileManagerObserver
 {
     [SerializeField] private TileManager tileManager;
     

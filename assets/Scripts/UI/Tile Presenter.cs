@@ -4,11 +4,10 @@ using UnityEngine;
 
 namespace UI
 {
-    public class TilePresenter : MonoBehaviour, ITileDataObserver
+    public class TilePresenter : MonoBehaviour, ITileManagerObserver
     {
         [SerializeField] private TileManager tileManager;
         [SerializeField] private MeshRenderer meshRenderer;
-        public float rotationSpeed = 100f;
 
         private TileData _tileData;
 
@@ -24,6 +23,11 @@ namespace UI
 
         public void FixedUpdate()
         {
+            UpdateTexture();
+        }
+
+        private void UpdateTexture()
+        {
             Material material = new Material(Shader.Find("Standard"))
             {
                 mainTexture = GenerateCardTexture()
@@ -31,7 +35,7 @@ namespace UI
             meshRenderer.material = material;
         }
 
-        Texture2D GenerateCardTexture()
+        private Texture2D GenerateCardTexture()
         {
             int gridSize = _tileData.gridSize;
             Texture2D texture = new Texture2D(gridSize, gridSize);

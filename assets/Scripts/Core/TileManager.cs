@@ -6,10 +6,10 @@ namespace Core
 {
     public class TileManager : MonoBehaviour
     {
-        private readonly List<ITileDataObserver> _observers = new();
+        private readonly List<ITileManagerObserver> _observers = new();
         public TileData tileData;
 
-        private void Start()
+        private void Awake()
         {
             NotifyObservers();
         }
@@ -19,7 +19,7 @@ namespace Core
             NotifyObservers();
         }
 
-        public void RegisterObserver(ITileDataObserver observer)
+        public void RegisterObserver(ITileManagerObserver observer)
         {
             if (!_observers.Contains(observer))
             {
@@ -27,7 +27,7 @@ namespace Core
             }
         }
 
-        public void UnregisterObserver(ITileDataObserver observer)
+        public void UnregisterObserver(ITileManagerObserver observer)
         {
             if (_observers.Contains(observer))
             {
@@ -38,7 +38,7 @@ namespace Core
         private void NotifyObservers()
         {
             if (tileData == null) return;
-            foreach (ITileDataObserver observer in _observers)
+            foreach (ITileManagerObserver observer in _observers)
             {
                 observer.OnTileDataChanged(tileData);
             }
