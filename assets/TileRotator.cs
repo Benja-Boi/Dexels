@@ -36,7 +36,7 @@ public class TileRotator : MonoBehaviour, ITileManagerObserver
 
     private void ResetRotation()
     {
-        _tileData.currentRotation = RotationState.Up;
+        //_tileData.currentRotation = RotationState.Up;
         var eulerAngles = _transform.eulerAngles;
         eulerAngles = new Vector3(eulerAngles.x, eulerAngles.y, 0.0f);
         _transform.eulerAngles = eulerAngles;

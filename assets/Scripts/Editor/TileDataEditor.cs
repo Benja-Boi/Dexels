@@ -1,3 +1,4 @@
+using System;
 using Core.ScriptableObjects;
 using UnityEditor;
 using UnityEngine;
@@ -7,82 +8,85 @@ namespace Editor
     [CustomEditor(typeof(TileData))]
     public class TileDataEditor : UnityEditor.Editor
     {
-        private SerializedProperty _colorPoolProperty;
-        private SerializedProperty _gridSizeProperty;
-        private Color _selectedColor;
+        private TileData _tileData;
+        private int _selectedColorIndex;
 
         private void OnEnable()
         {
-            _colorPoolProperty = serializedObject.FindProperty("colorPool");
-            _gridSizeProperty = serializedObject.FindProperty("gridSize");
+            _tileData = (TileData)target;
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            TileData tileData = (TileData)target;
 
-            // Draw the basic fields
-            EditorGUILayout.PropertyField(_colorPoolProperty);
-            EditorGUILayout.PropertyField(_gridSizeProperty);
-
-            DrawColorGrid(tileData);
-
-            DrawColorPalette(tileData);
-
-            // Add a button for randomizing colors
-            if (GUILayout.Button("Randomize Colors"))
+            // 1. Slot for ColorMap
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("colorMap"), new GUIContent("Color Map"));
+            if (_tileData.ColorMap == null)
             {
-                RandomizeTileColors(tileData);
+                EditorGUILayout.HelpBox("Please assign a Color Map.", MessageType.Warning);
+                //return;
             }
+
+            // 2. Grid Display
+            DrawGrid();
+
+            // 3. Color Palette
+            DrawColorPalette();
+
+            // 4. Grid Size Options
+            DrawGridSizeOptions();
 
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawColorGrid(TileData tileData)
+        private void DrawGrid()
         {
-            GUI.backgroundColor = Color.white; // Reset background color
-            // Draw the grid
-            int gridSize = tileData.gridSize;
-            for (int y = 0; y < gridSize; y++)
+            EditorGUILayout.LabelField("Grid", EditorStyles.boldLabel);
+
+            var gridData = _tileData.ColorGridData;
+            for (var i = 0; i < gridData.GridSize; i++)
             {
                 EditorGUILayout.BeginHorizontal();
-                for (int x = 0; x < gridSize; x++)
+                for (var j = 0; j < gridData.GridSize; j++)
                 {
-                    int index = y * gridSize + x;
-                    if (index < tileData.colors.Length)
-                    {
-                        GUI.backgroundColor = tileData.colors[index];
-                        if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
-                        {
-                            tileData.colors[index] = _selectedColor;
-                            EditorUtility.SetDirty(target); // Mark object as dirty to ensure changes are saved
-                        }
-                    }
+                    DrawGridCell(i, j);
                 }
-
                 EditorGUILayout.EndHorizontal();
             }
         }
 
-        private void DrawColorPalette(TileData tileData)
+        private void DrawGridCell(int x, int y)
+        {
+            var gridData = _tileData.ColorGridData;
+            var color = _tileData.GetColor(x, y);
+            if (GUILayout.Button("", GUILayout.Width(40), GUILayout.Height(40)))
+            {
+                gridData.SetColor(x, y, _selectedColorIndex);
+                EditorUtility.SetDirty(target);
+            }
+            EditorGUI.DrawRect(GUILayoutUtility.GetLastRect(), color);
+        }
+
+        private void DrawColorPalette()
         {
             // Ensure tileData has a valid color pool reference
-            if (tileData.colorPool != null)
+            if (_tileData.ColorMap != null)
             {
                 GUI.backgroundColor = Color.white; // Reset background color
                 EditorGUILayout.LabelField("Color Palette:");
                 EditorGUILayout.BeginHorizontal();
-                foreach (var color in tileData.colorPool.colors)
+                foreach (var color in _tileData.ColorMap.Colors())
                 {
                     GUI.backgroundColor = color;
                     if (GUILayout.Button("", GUILayout.Width(25), GUILayout.Height(25)))
                     {
-                        _selectedColor = color;
+                        _selectedColorIndex = _tileData.ColorMap.GetKey(color);
                     }
                 }
 
                 EditorGUILayout.EndHorizontal();
+                GUI.backgroundColor = Color.white; // Reset background color
             }
             else
             {
@@ -90,19 +94,27 @@ namespace Editor
             }
         }
 
-        private void RandomizeTileColors(TileData tileData)
+
+        private void DrawGridSizeOptions()
         {
-            if (tileData.colorPool != null && tileData.colorPool.colors is { Length: > 0 })
-            {
-                Undo.RecordObject(tileData, "Randomize Colors"); // To allow undoing the change
+            EditorGUILayout.LabelField("Grid Size Options", EditorStyles.boldLabel);
+    
+            // Define the grid size options and their corresponding labels
+            int[] gridSizeOptions = { 3, 5, 7 };
+            string[] gridSizeLabels = { "3x3", "5x5", "7x7" };
 
-                for (int i = 0; i < tileData.colors.Length; i++)
-                {
-                    tileData.colors[i] = tileData.colorPool.colors[Random.Range(0, tileData.colorPool.colors.Length)];
-                }
+            // Find the index of the current grid size in the options array
+            var currentGridSizeIndex = Array.IndexOf(gridSizeOptions, _tileData.GridSize);
+            if (currentGridSizeIndex < 0) currentGridSizeIndex = 0; // Default to the first option if not found
 
-                EditorUtility.SetDirty(tileData); // Mark the TileData as dirty to ensure changes are saved
-            }
+            // Display the radio buttons and get the selected index
+            var selectedGridSizeIndex = GUILayout.Toolbar(currentGridSizeIndex, gridSizeLabels);
+
+            // Check if the grid size has been changed
+            if (selectedGridSizeIndex == currentGridSizeIndex) return;
+            _tileData.GridSize = gridSizeOptions[selectedGridSizeIndex];
+            EditorUtility.SetDirty(target);
         }
+
     }
 }

@@ -4,14 +4,31 @@ using UnityEngine;
 
 namespace Core
 {
-    public class TileManager : MonoBehaviour
+    [RequireComponent(typeof(BoxCollider))]
+    public class TileManager : MonoBehaviour, ITileDataContainer
     {
         private readonly List<ITileManagerObserver> _observers = new();
-        public TileData tileData;
+        [SerializeField] private TileData tileData;
+        private BoxCollider _boxCollider;
 
+        public (int, int) WorldToCellCoordinates(Vector3 worldPosition)
+        {
+            var thisTransform = transform;
+            var localPosition = thisTransform.InverseTransformPoint(worldPosition);
+            var cellSize = (_boxCollider.size.x * thisTransform.localScale.x) / tileData.GridSize; // Assume box collider and transform are squares.
+
+            var x = Mathf.FloorToInt(localPosition.x / cellSize);
+            var y = Mathf.FloorToInt(localPosition.y / cellSize);
+
+            Debug.Log("Cell Coordinates: (" + x + ", " + y + ")" );
+            
+            return (x, y);
+        }
+        
         private void Awake()
         {
             NotifyObservers();
+            _boxCollider = GetComponent<BoxCollider>();
         }
 
         private void OnValidate()
@@ -44,10 +61,15 @@ namespace Core
             }
         }
 
-        public void SetTileData(TileData newTileData)
+        public void SetTileData(TileData tileData)
         {
-            tileData = newTileData;
+            this.tileData = tileData;
             NotifyObservers();
+        }
+
+        public TileData GetTileData()
+        {
+            return tileData;
         }
     }
 }

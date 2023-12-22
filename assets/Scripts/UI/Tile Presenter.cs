@@ -10,7 +10,7 @@ namespace UI
         [SerializeField] private MeshRenderer meshRenderer;
 
         private TileData _tileData;
-
+        
         private void OnEnable()
         {
             tileManager.RegisterObserver(this);
@@ -26,26 +26,31 @@ namespace UI
             UpdateTexture();
         }
 
+        public void OnTileDataChanged(TileData tileData)
+        {
+            _tileData = tileData;
+        }
+        
         private void UpdateTexture()
         {
-            Material material = new Material(Shader.Find("Standard"))
+            var material = new Material(Shader.Find("Standard"))
             {
                 mainTexture = GenerateCardTexture()
-            }; // You can use a different shader if needed
+            };
             meshRenderer.material = material;
         }
 
         private Texture2D GenerateCardTexture()
         {
-            int gridSize = _tileData.gridSize;
-            Texture2D texture = new Texture2D(gridSize, gridSize);
+            var gridSize = _tileData.GridSize;
+            var texture = new Texture2D(gridSize, gridSize);
 
-            for (int x = 0; x < gridSize; x++)
+            for (var y = 0; y < gridSize; y++)
             {
-                for (int y = 0; y < gridSize; y++)
+                for (var x = 0; x < gridSize; x++)
                 {
-                    Color color = _tileData.colors[x + y * gridSize];
-                    texture.SetPixel(x, y, color);
+                    var color = _tileData.GetColor(x, y);
+                    texture.SetPixel(x, FlipY(y), color);  // Texture coordinates start at bottom left, our 0,0 is top left.
                 }
             }
             texture.filterMode = FilterMode.Point;
@@ -53,9 +58,9 @@ namespace UI
             return texture;
         }
 
-        public void OnTileDataChanged(TileData tileData)
+        private int FlipY(int y)
         {
-            _tileData = tileData;
+            return _tileData.GridSize - 1 - y;
         }
     }
 }
