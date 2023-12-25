@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Core.ScriptableObjects
@@ -6,22 +7,22 @@ namespace Core.ScriptableObjects
     [Serializable]
     public class ColorGridData
     {
-        private int _gridSize; // Default to 5x5, can be changed in Inspector
-        private int[] _colors; // Array to represent grid colors
-    
-        public ColorGridData(int gridSize)
+        [SerializeField] private int gridSize; // Default to 5x5, can be changed in Inspector
+        [SerializeField] private int[] colors; // Array to represent grid colors
+
+        public void Initialize(int newGridSize)
         {
-            _gridSize = gridSize;
+            gridSize = newGridSize;
             InitializeColors();
         }
         
         public int GridSize
         {
-            get => _gridSize;
+            get => gridSize;
             set
             {
-                if (_gridSize == value) return;
-                _gridSize = value;
+                if (gridSize == value) return;
+                gridSize = value;
                 UpdateGridSize();
             }
         }
@@ -29,12 +30,12 @@ namespace Core.ScriptableObjects
         public void SetColor(int x, int y, int color)
         {
             ValidateCoordinates(x, y);
-            _colors[y * _gridSize + x] = color;
+            colors[y * gridSize + x] = color;
         }
 
         private void ValidateCoordinates(int x, int y)
         {
-            if (x < 0 || x >= _gridSize || y < 0 || y >= _gridSize)
+            if (x < 0 || x >= gridSize || y < 0 || y >= gridSize)
             {
                 throw new IndexOutOfRangeException($"Coordinates ({x}, {y}) are out of range.");
             }
@@ -87,14 +88,14 @@ namespace Core.ScriptableObjects
 
         private void UpdateGridSize()
         {
-            if (_colors != null && _colors.Length == _gridSize * _gridSize) return; // No update needed
+            if (colors != null && colors.Length == gridSize * gridSize) return; // No update needed
             
-            _colors ??= new int[_gridSize * _gridSize]; // If Colors is null, initialize it
-            var oldColors = _colors;             // Otherwise, save its current contents
-            _colors = new int[_gridSize * _gridSize];
+            colors ??= new int[gridSize * gridSize]; // If Colors is null, initialize it
+            var oldColors = colors;             // Otherwise, save its current contents
+            colors = new int[gridSize * gridSize];
             
             var oldGridSize = (int) Math.Sqrt(oldColors.Length);
-            var minGridSize = oldGridSize < _gridSize ? oldGridSize : _gridSize;
+            var minGridSize = oldGridSize < gridSize ? oldGridSize : gridSize;
             
             // Copy the colors from the old array to the new one
             for (var y=0; y<minGridSize; y++)
@@ -109,15 +110,15 @@ namespace Core.ScriptableObjects
         public int GetColorInt(int x, int y)
         {
             ValidateCoordinates(x, y);
-            return _colors[y * _gridSize + x];
+            return colors[y * gridSize + x];
         }
 
         private void InitializeColors()
         {
-            if (_colors == null)
+            if (colors == null)
                 Debug.Log("Colors array is null, initializing");
 
-            _colors ??= new int[_gridSize * _gridSize]; 
+            colors ??= new int[gridSize * gridSize]; 
         }
     }
 }

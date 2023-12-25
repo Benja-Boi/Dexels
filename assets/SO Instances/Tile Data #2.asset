@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fb55633f41a4cde9b419960d4c4277d, type: 3}
   m_Name: Tile Data #2
   m_EditorClassIdentifier: 
-  colorGridData: {fileID: 0}
-  colorMap: {fileID: 0}
+  colorGridData:
+    gridSize: 3
+    colors: 010000000000000001000000000000000200000000000000010000000000000001000000
+  colorMap: {fileID: 11400000, guid: 97a6721fd7d244a7380c64fd28176e6d, type: 2}
+  defaultColorMap: {fileID: 11400000, guid: 97a6721fd7d244a7380c64fd28176e6d, type: 2}

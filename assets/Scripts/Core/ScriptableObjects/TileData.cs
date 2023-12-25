@@ -4,10 +4,9 @@ using UnityEngine;
 namespace Core.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "New Tile Data", menuName = "Tile Data")]
-
     public class TileData : ScriptableObject
     {
-        [SerializeField] private ColorGridData colorGridData = new ColorGridData(5);
+        [SerializeField] private ColorGridData colorGridData;
         [SerializeField] private ColorMap colorMap;
         [SerializeField] private ColorMap defaultColorMap;
 
@@ -22,18 +21,25 @@ namespace Core.ScriptableObjects
 
         public void OnEnable()
         {
+            TryInitColorGridData();
             LoadDefaultColorMap();
+        }
+
+        private void TryInitColorGridData()
+        {
+            if (colorGridData != null) return;
+            colorGridData = new ColorGridData();
+            colorGridData.Initialize(5); // Default size, or retrieve from saved data
         }
 
         private void LoadDefaultColorMap()
         {
             defaultColorMap = AssetDatabase.LoadAssetAtPath<ColorMap>("Assets/SO Instances/DefaultColorMap.asset");
             if (defaultColorMap == null)
-            {
                 Debug.LogError("Default Color Map not found.");
-            }
-
-            colorMap = defaultColorMap;
+            
+            if (colorMap == null)
+                colorMap = defaultColorMap;
         }
 
         public Color GetColor(int x, int y)

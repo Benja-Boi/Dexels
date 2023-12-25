@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Core.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "ColorMap", menuName = "Color Mapping/ColorMap")]
+    
+    [Serializable]
     public class ColorMap : ScriptableObject
     {
         public List<ColorMapEntry> entries = new();
@@ -56,12 +60,12 @@ namespace Core.ScriptableObjects
 
         public string[] GetColorTextures()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 
 
-    [System.Serializable]
+    [Serializable]
     public class ColorMapEntry
     {
         public int key;
