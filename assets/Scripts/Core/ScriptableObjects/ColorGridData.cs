@@ -32,6 +32,12 @@ namespace Core.ScriptableObjects
             ValidateCoordinates(x, y);
             colors[y * gridSize + x] = color;
         }
+        
+        public void SetColor(int i, int color)
+        {
+            ValidateCoordinates(i);
+            colors[i] = color;
+        }
 
         private void ValidateCoordinates(int x, int y)
         {
@@ -41,51 +47,19 @@ namespace Core.ScriptableObjects
             }
         }
         
+        private void ValidateCoordinates(int i)
+        {
+            if (i < 0 || i >= gridSize * gridSize)
+            {
+                throw new IndexOutOfRangeException($"Index {i} is out of range.");
+            }
+        }
+
         public void OnEnable()
         {
             InitializeColors();
         }
-
-        // public CellGroup GetCellGroup(int sourceX, int sourceY)
-        // {
-        //     // Get the list of cells that are the same color as the cell at x,y and can be reached from it by "flooding"
-        //     var sourceColor = colors[sourceY * gridSize + sourceX];
-        //
-        //     var connectedCells = new List<(int x, int y)>();
-        //     var visited = new bool[gridSize, gridSize];
-        //     var queue = new Queue<(int s_x, int s_y)>();
-        //
-        //     queue.Enqueue((sourceX, sourceY));
-        //     visited[sourceX, sourceX] = true;
-        //
-        //     while (queue.Count > 0)
-        //     {
-        //         var (x, y) = queue.Dequeue();
-        //         connectedCells.Add((x, y));
-        //
-        //         // Check adjacent cells: up, down, left, right
-        //         foreach (var (dx, dy) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0) })
-        //         {
-        //             int nx = x + dx, ny = y + dy;
-        //
-        //             if (IsWithinBounds(nx, ny) && 
-        //                 !visited[ny, nx] && 
-        //                 colors[ny * gridSize + nx] == sourceColor)
-        //             {
-        //                 queue.Enqueue((nx, ny));
-        //                 visited[ny, nx] = true;
-        //             }
-        //         }
-        //     }
-        //
-        //     return new CellGroup(connectedCells, colorMap.GetColor(sourceColor), sourceColor);
-        // }
-        //
-        // private bool IsWithinBounds(int x, int y)
-        // {
-        //     return x >= 0 && y >= 0 && x < gridSize && y < gridSize;
-        // }
-
+        
         private void UpdateGridSize()
         {
             if (colors != null && colors.Length == gridSize * gridSize) return; // No update needed
@@ -111,6 +85,12 @@ namespace Core.ScriptableObjects
         {
             ValidateCoordinates(x, y);
             return colors[y * gridSize + x];
+        }
+        
+        public int GetColorInt(int i)
+        {
+            ValidateCoordinates(i);
+            return colors[i];
         }
 
         private void InitializeColors()

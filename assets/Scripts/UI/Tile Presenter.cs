@@ -23,6 +23,7 @@ namespace UI
 
         public void FixedUpdate()
         {
+            if (_tileData == null) return;
             UpdateTexture();
         }
 

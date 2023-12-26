@@ -52,7 +52,8 @@ namespace Core.ScriptableObjects
             // Return a random color from the map
             return entries[Random.Range(0, entries.Count)].value;
         }
-        public int GetRandomKey()
+
+        public int GetRandomColorInt()
         {
             // Return a random color from the map
             return entries[Random.Range(0, entries.Count)].key;
