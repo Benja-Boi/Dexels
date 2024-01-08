@@ -316,6 +316,8 @@ GameObject:
   - component: {fileID: 470300897}
   - component: {fileID: 470300899}
   - component: {fileID: 470300900}
+  - component: {fileID: 470300902}
+  - component: {fileID: 470300901}
   m_Layer: 0
   m_Name: Merge Area
   m_TagString: Untagged
@@ -390,6 +392,47 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &470300901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470300896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5e3624ae403048b09e7b6d5489bcff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellSelection: {fileID: 11400000, guid: cbe09cb598df1483a93e4f0b66371050, type: 2}
+--- !u!114 &470300902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470300896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3721d19a1ee648109472ae2b634b0098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  event: {fileID: 11400000, guid: 48eb4d851ff26492d90fdd0927be3fae, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 470300901}
+        m_TargetAssemblyTypeName: Core.Merge_Area.CellSelector, Assembly-CSharp
+        m_MethodName: SelectCell
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,8 +767,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5e3624ae403048b09e7b6d5489bcff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisSelectionState: 0
-  tileData: {fileID: 0}
   cellSelection: {fileID: 11400000, guid: cbe09cb598df1483a93e4f0b66371050, type: 2}
 --- !u!1 &1024436332
 GameObject:
@@ -736,7 +777,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1024436333}
-  - component: {fileID: 1024436334}
+  - component: {fileID: 1024436335}
+  - component: {fileID: 1024436336}
   m_Layer: 0
   m_Name: Tile 2 Slot
   m_TagString: Untagged
@@ -761,7 +803,28 @@ Transform:
   - {fileID: 580127121}
   m_Father: {fileID: 470300897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1024436334
+--- !u!65 &1024436335
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024436332}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1024436336
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -770,12 +833,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1024436332}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5e3624ae403048b09e7b6d5489bcff2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fcbdadb6cbad4cceaf24c9e996b41bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisSelectionState: 0
-  tileData: {fileID: 0}
-  cellSelection: {fileID: 11400000, guid: cbe09cb598df1483a93e4f0b66371050, type: 2}
+  cellSelectionOption: 0
+  cellSelectedEvent: {fileID: 11400000, guid: 48eb4d851ff26492d90fdd0927be3fae, type: 2}
 --- !u!1 &1076866478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1226,7 +1288,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1612531734}
-  - component: {fileID: 1612531735}
+  - component: {fileID: 1612531737}
+  - component: {fileID: 1612531736}
   m_Layer: 0
   m_Name: Tile 1 Slot
   m_TagString: Untagged
@@ -1251,7 +1314,7 @@ Transform:
   - {fileID: 905260674}
   m_Father: {fileID: 470300897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1612531735
+--- !u!114 &1612531736
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1260,12 +1323,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 1612531733}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5e3624ae403048b09e7b6d5489bcff2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fcbdadb6cbad4cceaf24c9e996b41bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisSelectionState: 0
-  tileData: {fileID: 0}
-  cellSelection: {fileID: 11400000, guid: cbe09cb598df1483a93e4f0b66371050, type: 2}
+  cellSelectionOption: 0
+  cellSelectedEvent: {fileID: 11400000, guid: 48eb4d851ff26492d90fdd0927be3fae, type: 2}
+--- !u!65 &1612531737
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612531733}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.6}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1716957208
 GameObject:
   m_ObjectHideFlags: 0
