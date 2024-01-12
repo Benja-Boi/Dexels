@@ -6,24 +6,24 @@ namespace Core.ScriptableObjects
     [CreateAssetMenu(fileName = "New CellSelectEvent", menuName = "Event/CellSelectEvent")]
     public class CellSelectEvent : ScriptableObject
     {
-        private List<CellSelectEventListener> listeners = new List<CellSelectEventListener>();
+        private readonly List<CellSelectEventListener> _listeners = new();
 
         public void Raise(int cellIndex, CellSelectionOption selectionOption)
         {
-            for (int i = listeners.Count - 1; i >= 0; i--)
+            for (var i = _listeners.Count - 1; i >= 0; i--)
             {
-                listeners[i].OnEventRaised(cellIndex, selectionOption);
+                _listeners[i].OnEventRaised(cellIndex, selectionOption);
             }
         }
 
         public void RegisterListener(CellSelectEventListener listener)
         {
-            listeners.Add(listener);
+            _listeners.Add(listener);
         }
 
         public void UnregisterListener(CellSelectEventListener listener)
         {
-            listeners.Remove(listener);
+            _listeners.Remove(listener);
         }
     }
 }

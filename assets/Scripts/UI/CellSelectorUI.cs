@@ -9,14 +9,15 @@ namespace UI
     public class CellSelectorUI : MonoBehaviour
     {
         [SerializeField] private CellSelectionOption cellSelectionOption;
-        [SerializeField] private CellSelectEvent cellSelectedEvent;
-        [SerializeField] private GameObject singleCellSelectorObject;
+        [SerializeField] private GameObject individualCellButton;
+        [SerializeField] private CellSelection cellSelection; 
         
+        private IndividualCellButtonUI[] _individualCellButtons;
         private TileSlot _tileSlot;
         private BoxCollider _boxCollider;
         private Vector2 _cellSize;
         private bool _isActive;
-        
+
         private void Awake()
         {
             _boxCollider = GetComponent<BoxCollider>();
@@ -27,23 +28,34 @@ namespace UI
         {
             // Calculate cell size based on the collider bounds
             var colliderBounds = _boxCollider.bounds;
-            _cellSize = new Vector2(colliderBounds.size.x / _tileSlot.tileData.GridSize, colliderBounds.size.y / _tileSlot.tileData.GridSize);
+            _cellSize = new Vector2(colliderBounds.size.x / _tileSlot.tileData.GridSize,
+                colliderBounds.size.y / _tileSlot.tileData.GridSize);
             SpawnSingleCellSelectors();
         }
 
         private void SpawnSingleCellSelectors()
         {
             if (_tileSlot.tileData == null) return;
+            var selectorsParent = Instantiate(new GameObject(), transform.position, Quaternion.identity,
+                this.gameObject.transform);
+            var numCells = _tileSlot.tileData.GridSize * _tileSlot.tileData.GridSize;
+            _individualCellButtons = new IndividualCellButtonUI[numCells];
 
-            for (var i = 0; i < _tileSlot.tileData.GridSize * _tileSlot.tileData.GridSize; i++)
+            for (var i = 0; i < numCells; i++)
             {
                 var spawnLocation = CalculateCellCenter(i);
-                var newSelector = Instantiate(singleCellSelectorObject, spawnLocation, Quaternion.identity, this.gameObject.transform);
+                var newSelector = Instantiate(individualCellButton, spawnLocation, Quaternion.identity,
+                    selectorsParent.gameObject.transform);
                 var boxCollider = newSelector.GetOrAddComponent<BoxCollider>();
-                boxCollider.size = new Vector3(_cellSize.x, _cellSize.y, 0.2f);
-                var singleCellSelector = newSelector.GetOrAddComponent<SingleCellSelectorUI>();
-                singleCellSelector.SetCellIndex(9);
-                singleCellSelector.SetSelectorUI(this);
+                boxCollider.size = new Vector3(_cellSize.x, _cellSize.y, 0.3f);
+                var singleCellButton = newSelector.GetOrAddComponent<IndividualCellButtonUI>();
+                singleCellButton.SetCellIndex(i);
+                singleCellButton.SetSelectionOption(cellSelectionOption);
+                if (cellSelection.selection[i] == cellSelectionOption)
+                {
+                    singleCellButton.SetState(new CellButtonSelectedState(singleCellButton));
+                }
+                _individualCellButtons[i] = singleCellButton;
             }
         }
 
@@ -51,21 +63,21 @@ namespace UI
         {
             var halfGrid = _tileSlot.tileData.GridSize / 2;
             var position = transform.position;
-            var topLeft = (Vector2) position - (_cellSize * halfGrid);
+            var topLeft = new Vector2(position.x - _cellSize.x * halfGrid, position.y + _cellSize.y * halfGrid);
             var (x, y) = Utils.Coords1DTo2D(i, _tileSlot.tileData.GridSize);
-            var centerPos = new Vector3(topLeft.x - _cellSize.x * x, topLeft.y - _cellSize.y * y, position.z);
+            var centerPos =
+                new Vector3(topLeft.x + _cellSize.x * x, topLeft.y - _cellSize.y * y,
+                    position.z - .1f); // Button is brought forward in front of the tile
             return centerPos;
         }
 
-        public void OnCellHover(int cellIndex)
+        public void OnCellSelect(int cellIndex, CellSelectionOption selectionOption)
         {
-            Debug.Log("Hovering over cell: " + cellIndex);
+            if (selectionOption != cellSelectionOption)
+            {
+                var button = _individualCellButtons[cellIndex];
+                button.SetState(new CellButtonNotSelectedState(button));
+            }
         }
-
-        public void OnCellClick(int cellIndex)
-        {
-            cellSelectedEvent.Raise(cellIndex, cellSelectionOption);
-        }
-        
     }
 }

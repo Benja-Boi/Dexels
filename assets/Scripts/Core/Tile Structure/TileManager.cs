@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Core.ScriptableObjects;
 using UnityEngine;
 
-namespace Core
+namespace Core.Tile_Structure
 {
     [RequireComponent(typeof(BoxCollider))]
     public class TileManager : MonoBehaviour, ITileDataContainer
@@ -55,15 +55,15 @@ namespace Core
         private void NotifyObservers()
         {
             if (tileData == null) return;
-            foreach (ITileManagerObserver observer in _observers)
+            foreach (var observer in _observers)
             {
                 observer.OnTileDataChanged(tileData);
             }
         }
 
-        public void SetTileData(TileData tileData)
+        public void SetTileData(TileData newTileData)
         {
-            this.tileData = tileData;
+            tileData = newTileData;
             NotifyObservers();
         }
 
