@@ -1,25 +1,26 @@
+using Core;
 using Core.ScriptableObjects;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace UI
 {
-    [RequireComponent(typeof(TileSlot))]
     [RequireComponent(typeof(BoxCollider))]
     public class CellSelectorUI : MonoBehaviour
     {
         [SerializeField] private CellSelectionOption cellSelectionOption;
         [SerializeField] private CellSelectEvent cellSelectedEvent;
-
+        [SerializeField] private GameObject singleCellSelectorObject;
+        
         private TileSlot _tileSlot;
         private BoxCollider _boxCollider;
         private Vector2 _cellSize;
-
-        #region Monobehaviour
+        private bool _isActive;
         
         private void Awake()
         {
             _boxCollider = GetComponent<BoxCollider>();
-            _tileSlot = GetComponent<TileSlot>();
+            _tileSlot = GetComponentInParent<TileSlot>();
         }
 
         private void Start()
@@ -27,53 +28,44 @@ namespace UI
             // Calculate cell size based on the collider bounds
             var colliderBounds = _boxCollider.bounds;
             _cellSize = new Vector2(colliderBounds.size.x / _tileSlot.tileData.GridSize, colliderBounds.size.y / _tileSlot.tileData.GridSize);
+            SpawnSingleCellSelectors();
         }
-        
-        private void Update()
+
+        private void SpawnSingleCellSelectors()
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (_tileSlot.tileData == null) return;
 
-            if (!Physics.Raycast(ray, out var hit)) return;
-            if (hit.collider.gameObject != _boxCollider.gameObject) return;
-            
-            var hitPoint = hit.point;
-            var (row, col) = WorldToGridPosition(hitPoint);
-
-            if (row >= 0 && row < _tileSlot.tileData.GridSize && col >= 0 && col < _tileSlot.tileData.GridSize)
+            for (var i = 0; i < _tileSlot.tileData.GridSize * _tileSlot.tileData.GridSize; i++)
             {
-                HandleHoverEffect(row, col);
-
-                if (Input.GetMouseButtonDown(0))
-                {
-                    OnCellClicked(row, col);
-                }
+                var spawnLocation = CalculateCellCenter(i);
+                var newSelector = Instantiate(singleCellSelectorObject, spawnLocation, Quaternion.identity, this.gameObject.transform);
+                var boxCollider = newSelector.GetOrAddComponent<BoxCollider>();
+                boxCollider.size = new Vector3(_cellSize.x, _cellSize.y, 0.2f);
+                var singleCellSelector = newSelector.GetOrAddComponent<SingleCellSelectorUI>();
+                singleCellSelector.SetCellIndex(9);
+                singleCellSelector.SetSelectorUI(this);
             }
         }
-        
-        #endregion
 
-        private void OnCellClicked(int row, int col)
+        private Vector3 CalculateCellCenter(int i)
         {
-            var cellIndex = row * _tileSlot.tileData.GridSize + col;
+            var halfGrid = _tileSlot.tileData.GridSize / 2;
+            var position = transform.position;
+            var topLeft = (Vector2) position - (_cellSize * halfGrid);
+            var (x, y) = Utils.Coords1DTo2D(i, _tileSlot.tileData.GridSize);
+            var centerPos = new Vector3(topLeft.x - _cellSize.x * x, topLeft.y - _cellSize.y * y, position.z);
+            return centerPos;
+        }
+
+        public void OnCellHover(int cellIndex)
+        {
+            Debug.Log("Hovering over cell: " + cellIndex);
+        }
+
+        public void OnCellClick(int cellIndex)
+        {
             cellSelectedEvent.Raise(cellIndex, cellSelectionOption);
         }
-
-        private void HandleHoverEffect(int row, int col)
-        {
-            Debug.Log("Hovering over cell: " + row + ", " + col);
-        }
-
-
-        private (int, int) WorldToGridPosition(Vector3 pos)
-        {
-            // Translate world position to grid position
-            var position = _boxCollider.transform.position;
-            var row = (int)((pos.x - position.x) / _cellSize.x);
-            var col = (int)((pos.y - position.y) / _cellSize.y);
-
-            return (row, col);
-        }
-        
         
     }
 }

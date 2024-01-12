@@ -699,6 +699,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 905260674}
+  - component: {fileID: 905260677}
+  - component: {fileID: 905260676}
+  - component: {fileID: 905260675}
   m_Layer: 0
   m_Name: Selection Grid 1
   m_TagString: Untagged
@@ -721,6 +724,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1612531734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &905260675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905260673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcbdadb6cbad4cceaf24c9e996b41bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellSelectionOption: 0
+  cellSelectedEvent: {fileID: 11400000, guid: 48eb4d851ff26492d90fdd0927be3fae, type: 2}
+  singleCellSelectorObject: {fileID: 2739484737455459373, guid: 9c6665863ae0c154c852755a0a91edbb, type: 3}
+--- !u!65 &905260676
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905260673}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &905260677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905260673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03dcb5a8539094d34b09918b04b52be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileData: {fileID: 0}
 --- !u!1 &960700857
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,6 +831,7 @@ GameObject:
   - component: {fileID: 1024436333}
   - component: {fileID: 1024436335}
   - component: {fileID: 1024436336}
+  - component: {fileID: 1024436337}
   m_Layer: 0
   m_Name: Tile 2 Slot
   m_TagString: Untagged
@@ -836,8 +889,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fcbdadb6cbad4cceaf24c9e996b41bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellSelectionOption: 0
+  cellSelectionOption: 1
   cellSelectedEvent: {fileID: 11400000, guid: 48eb4d851ff26492d90fdd0927be3fae, type: 2}
+  singleCellSelectorObject: {fileID: 2739484737455459373, guid: 9c6665863ae0c154c852755a0a91edbb, type: 3}
+--- !u!114 &1024436337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024436332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03dcb5a8539094d34b09918b04b52be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileData: {fileID: 11400000, guid: ac674ab3057974fb99fab9ca39b842e3, type: 2}
 --- !u!1 &1076866478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1290,6 +1357,7 @@ GameObject:
   - component: {fileID: 1612531734}
   - component: {fileID: 1612531737}
   - component: {fileID: 1612531736}
+  - component: {fileID: 1612531738}
   m_Layer: 0
   m_Name: Tile 1 Slot
   m_TagString: Untagged
@@ -1328,6 +1396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellSelectionOption: 0
   cellSelectedEvent: {fileID: 11400000, guid: 48eb4d851ff26492d90fdd0927be3fae, type: 2}
+  singleCellSelectorObject: {fileID: 2739484737455459373, guid: 9c6665863ae0c154c852755a0a91edbb, type: 3}
 --- !u!65 &1612531737
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1349,6 +1418,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.6}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1612531738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612531733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03dcb5a8539094d34b09918b04b52be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileData: {fileID: 11400000, guid: 216df8f8d3d1a40ea9d989809ed5e342, type: 2}
 --- !u!1 &1716957208
 GameObject:
   m_ObjectHideFlags: 0
