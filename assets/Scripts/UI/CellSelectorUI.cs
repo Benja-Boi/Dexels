@@ -1,5 +1,6 @@
 using Core;
-using Core.ScriptableObjects;
+using Core.Merge_Area;
+using Core.Merge_Area.Scriptable_Objects;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -28,17 +29,18 @@ namespace UI
         {
             // Calculate cell size based on the collider bounds
             var colliderBounds = _boxCollider.bounds;
-            _cellSize = new Vector2(colliderBounds.size.x / _tileSlot.tileData.GridSize,
-                colliderBounds.size.y / _tileSlot.tileData.GridSize);
+            var gridSize = _tileSlot.GetTile().GridSize;
+            _cellSize = new Vector2(colliderBounds.size.x / gridSize, colliderBounds.size.y / gridSize);
             SpawnSingleCellSelectors();
         }
 
         private void SpawnSingleCellSelectors()
         {
-            if (_tileSlot.tileData == null) return;
+            if (_tileSlot.GetTile() == null) return;
+            var gridSize = _tileSlot.GetTile().GridSize;
             var selectorsParent = Instantiate(new GameObject(), transform.position, Quaternion.identity,
                 this.gameObject.transform);
-            var numCells = _tileSlot.tileData.GridSize * _tileSlot.tileData.GridSize;
+            var numCells = gridSize * gridSize;
             _individualCellButtons = new IndividualCellButtonUI[numCells];
 
             for (var i = 0; i < numCells; i++)
@@ -61,10 +63,11 @@ namespace UI
 
         private Vector3 CalculateCellCenter(int i)
         {
-            var halfGrid = _tileSlot.tileData.GridSize / 2;
+            var gridSize = _tileSlot.GetTile().GridSize;
+            var halfGrid = gridSize / 2;
             var position = transform.position;
             var topLeft = new Vector2(position.x - _cellSize.x * halfGrid, position.y + _cellSize.y * halfGrid);
-            var (x, y) = Utils.Coords1DTo2D(i, _tileSlot.tileData.GridSize);
+            var (x, y) = GridCoordinates.Coords1DTo2D(i, gridSize);
             var centerPos =
                 new Vector3(topLeft.x + _cellSize.x * x, topLeft.y - _cellSize.y * y,
                     position.z - .1f); // Button is brought forward in front of the tile

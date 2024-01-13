@@ -1,5 +1,6 @@
 ﻿using Core;
-using Core.ScriptableObjects;
+using Core.Merge_Area;
+using Core.Merge_Area.Scriptable_Objects;
 using UnityEngine;
 
 namespace UI

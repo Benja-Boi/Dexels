@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using Core.ScriptableObjects;
+using Core.Tile_Structure.Scriptable_Objects;
 using UnityEngine;
 
 namespace Core.Tile_Structure
 {
     [RequireComponent(typeof(BoxCollider))]
-    public class TileManager : MonoBehaviour, ITileDataContainer
+    public class TileManager : MonoBehaviour, IObservable<TileData>
     {
-        private readonly List<ITileManagerObserver> _observers = new();
+        private readonly List<IObserver<TileData>> _observers = new();
         [SerializeField] private TileData tileData;
         private BoxCollider _boxCollider;
 
@@ -35,29 +35,13 @@ namespace Core.Tile_Structure
         {
             NotifyObservers();
         }
-
-        public void RegisterObserver(ITileManagerObserver observer)
-        {
-            if (!_observers.Contains(observer))
-            {
-                _observers.Add(observer);
-            }
-        }
-
-        public void UnregisterObserver(ITileManagerObserver observer)
-        {
-            if (_observers.Contains(observer))
-            {
-                _observers.Remove(observer);
-            }
-        }
-
+        
         private void NotifyObservers()
         {
             if (tileData == null) return;
             foreach (var observer in _observers)
             {
-                observer.OnTileDataChanged(tileData);
+                observer.Notify(tileData);
             }
         }
 
@@ -70,6 +54,22 @@ namespace Core.Tile_Structure
         public TileData GetTileData()
         {
             return tileData;
+        }
+
+        public void RegisterObserver(IObserver<TileData> observer)
+        {
+            if (!_observers.Contains(observer))
+            {
+                _observers.Add(observer);
+            }
+        }
+
+        public void UnregisterObserver(IObserver<TileData> observer)
+        {
+            if (_observers.Contains(observer))
+            {
+                _observers.Remove(observer);
+            }
         }
     }
 }

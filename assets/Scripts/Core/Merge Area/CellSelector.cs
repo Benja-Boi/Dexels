@@ -1,4 +1,4 @@
-using Core.ScriptableObjects;
+using Core.Merge_Area.Scriptable_Objects;
 using UnityEngine;
 
 namespace Core.Merge_Area

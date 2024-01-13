@@ -1,5 +1,5 @@
 using System;
-using Core.ScriptableObjects;
+using Core.Tile_Structure.Scriptable_Objects;
 using UnityEditor;
 using UnityEngine;
 

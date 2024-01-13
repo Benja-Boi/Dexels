@@ -1,11 +1,11 @@
 using System.Collections;
-using Core.ScriptableObjects;
 using Core.Tile_Structure;
+using Core.Tile_Structure.Scriptable_Objects;
 using UnityEngine;
 
 namespace Core
 {
-    public class TileRotator : MonoBehaviour, ITileManagerObserver
+    public class TileRotator : MonoBehaviour, IObserver<TileData>
     {
         [SerializeField] private TileManager tileManager;
     
@@ -75,6 +75,11 @@ namespace Core
             }
         
             _isRotating = false;
+        }
+
+        public void Notify(TileData newTileData)
+        {
+            OnTileDataChanged(newTileData);
         }
 
         public void OnTileDataChanged(TileData tileData)

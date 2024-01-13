@@ -1,17 +1,18 @@
+using System;
 using Core;
-using Core.ScriptableObjects;
 using Core.Tile_Structure;
+using Core.Tile_Structure.Scriptable_Objects;
 using UnityEngine;
 
 namespace UI
 {
-    public class TilePresenter : MonoBehaviour, ITileManagerObserver
+    public class TilePresenter : MonoBehaviour, Core.Tile_Structure.IObserver<TileData>, ITilePresenter
     {
         [SerializeField] private TileManager tileManager;
         [SerializeField] private MeshRenderer meshRenderer;
 
         private TileData _tileData;
-        
+
         private void OnEnable()
         {
             tileManager.RegisterObserver(this);
@@ -26,6 +27,11 @@ namespace UI
         {
             if (_tileData == null) return;
             UpdateTexture();
+        }
+        
+        public void Notify(TileData newTileData)
+        {
+            OnTileDataChanged(newTileData);
         }
 
         public void OnTileDataChanged(TileData tileData)
@@ -63,6 +69,11 @@ namespace UI
         private int FlipY(int y)
         {
             return _tileData.GridSize - 1 - y;
+        }
+
+        public void PresentTile(TileData tileData)
+        {
+            _tileData = tileData;
         }
     }
 }

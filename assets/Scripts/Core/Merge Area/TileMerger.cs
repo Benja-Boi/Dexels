@@ -1,6 +1,7 @@
 using System;
-using Core.ScriptableObjects;
+using Core.Merge_Area.Scriptable_Objects;
 using Core.Tile_Structure;
+using Core.Tile_Structure.Scriptable_Objects;
 using UnityEngine;
 
 namespace Core.Merge_Area
@@ -14,7 +15,7 @@ namespace Core.Merge_Area
 
         public void MergeTiles()
         {
-            Debug.Log("Merge Tiles!!");
+            Debug.Log("Merging Tiles!!");
             
             if (tileData1.GridSize != tileData2.GridSize) return;   // Different grid sizes, can't merge.
             if (tileData1.ColorMap != tileData2.ColorMap) return;   // Different color map, can't merge.
