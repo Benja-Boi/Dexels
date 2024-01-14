@@ -27,7 +27,14 @@ namespace UI
 
         private void Start()
         {
-            // Calculate cell size based on the collider bounds
+            if (_tileSlot.GetTile() != null)
+            {
+                Activate();
+            }
+        }
+
+        public void Activate()
+        {
             var colliderBounds = _boxCollider.bounds;
             var gridSize = _tileSlot.GetTile().GridSize;
             _cellSize = new Vector2(colliderBounds.size.x / gridSize, colliderBounds.size.y / gridSize);

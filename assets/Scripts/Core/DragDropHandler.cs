@@ -32,7 +32,6 @@ namespace Core
         
         private void OnMouseDown()
         {
-            Debug.Log("Dragging");
             OnBeginDrag();
         }
 
@@ -60,8 +59,8 @@ namespace Core
             var targetSlot = GetTargetSlot();
             // Tile Slot found and is empty
             if (targetSlot != null  && targetSlot.GetComponent<TileSlot>().GetTile() == null)
-            { 
-                Debug.Log("Tile Slot found and is empty");
+            {
+                originalSlot.RemoveTile();
                 targetSlot.SetTile(draggedTile);
                 ResetPosition(targetSlot.transform);
             } // Tile Slot not found
@@ -77,13 +76,12 @@ namespace Core
         
         private TileSlot GetTargetSlot() {
             var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits = { };
+            var hits = new RaycastHit[10];
             Physics.RaycastNonAlloc(ray, hits);
-            foreach (var hit in hits) {
-                Debug.Log("Hit!");
-                if (hit.collider.gameObject.CompareTag(Constants.TileSlotTag)) {
-                    return hit.collider.gameObject.GetComponent<TileSlot>();
-                }
+            foreach (var hit in hits)
+            {
+                if (hit.collider == null || (!hit.collider.gameObject.CompareTag(Constants.TileSlotTag))) continue;
+                return hit.collider.gameObject.GetComponent<TileSlot>();
             }
             return null;
         }
