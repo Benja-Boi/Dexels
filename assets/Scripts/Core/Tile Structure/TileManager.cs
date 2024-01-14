@@ -4,8 +4,14 @@ using UnityEngine;
 
 namespace Core.Tile_Structure
 {
+    public interface ITileManager : IObservable<TileData>
+    {
+        void SetTileData(TileData mergedTileData);
+        TileData GetTileData();
+    }
+
     [RequireComponent(typeof(BoxCollider))]
-    public class TileManager : MonoBehaviour, IObservable<TileData>
+    public class TileManager : MonoBehaviour, ITileManager
     {
         private readonly List<IObserver<TileData>> _observers = new();
         [SerializeField] private TileData tileData;

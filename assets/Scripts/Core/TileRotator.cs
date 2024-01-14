@@ -7,27 +7,29 @@ namespace Core
 {
     public class TileRotator : MonoBehaviour, IObserver<TileData>
     {
-        [SerializeField] private TileManager tileManager;
+        private ITileManager _tileManager;
     
         public float rotationDuration = 1.0f; // Duration of the rotation
         public float rotationAngle = 90.0f; // Angle to rotate
     
         private bool _isRotating; // Is the prefab currently rotating?
         private Transform _transform;
+        private Camera _mainCamera;
 
         private void OnEnable()
         {
-            tileManager.RegisterObserver(this);
+            _tileManager.RegisterObserver(this);
         }
 
         private void OnDisable()
         {
-            tileManager.UnregisterObserver(this);
+            _tileManager.UnregisterObserver(this);
         }
 
         private void Awake()
         {
             _transform = transform;
+            _mainCamera = Camera.main;
         }
 
         private void Start()
@@ -47,7 +49,7 @@ namespace Core
         {
             if (Input.GetMouseButtonDown(0) && !_isRotating) // Check for a left mouse button click
             {
-                Ray ray = Camera.main!.ScreenPointToRay(Input.mousePosition);   // @TODO: Camera may be null
+                Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
                 if (!Physics.Raycast(ray, out var hit)) return; // No hits
                 if (hit.transform != transform && !hit.transform.IsChildOf(transform)) return;  // Not the prefab or one of its children
@@ -60,9 +62,9 @@ namespace Core
         private IEnumerator RotateTile()
         {
         
-            float time = 0.0f;
-            float startRotation = _transform.eulerAngles.z;
-            float endRotation = startRotation + rotationAngle; // Rotate around Z-axis
+            var time = 0.0f;
+            var startRotation = _transform.eulerAngles.z;
+            var endRotation = startRotation + rotationAngle; // Rotate around Z-axis
 
             while (time < rotationDuration)
             {

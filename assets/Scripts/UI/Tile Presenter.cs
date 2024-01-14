@@ -8,19 +8,23 @@ namespace UI
 {
     public class TilePresenter : MonoBehaviour, Core.Tile_Structure.IObserver<TileData>, ITilePresenter
     {
-        [SerializeField] private TileManager tileManager;
-        [SerializeField] private MeshRenderer meshRenderer;
-
+        [SerializeField] private Renderer tileRenderer;
+        private ITileManager _tileManager;
         private TileData _tileData;
+
+        private void Awake()
+        {
+            _tileManager = GetComponent<ITileManager>();
+        }
 
         private void OnEnable()
         {
-            tileManager.RegisterObserver(this);
+            _tileManager.RegisterObserver(this);
         }
 
         private void OnDisable()
         {
-            tileManager.UnregisterObserver(this);
+            _tileManager.UnregisterObserver(this);
         }
 
         public void FixedUpdate()
@@ -34,7 +38,7 @@ namespace UI
             OnTileDataChanged(newTileData);
         }
 
-        public void OnTileDataChanged(TileData tileData)
+        private void OnTileDataChanged(TileData tileData)
         {
             _tileData = tileData;
         }
@@ -45,7 +49,7 @@ namespace UI
             {
                 mainTexture = GenerateCardTexture()
             };
-            meshRenderer.material = material;
+            tileRenderer.material = material;
         }
 
         private Texture2D GenerateCardTexture()

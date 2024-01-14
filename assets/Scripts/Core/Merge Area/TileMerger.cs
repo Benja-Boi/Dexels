@@ -10,9 +10,9 @@ namespace Core.Merge_Area
     {
         [SerializeField] private TileData tileData1;
         [SerializeField] private TileData tileData2;
-        [SerializeField] private TileManager mergedTileManager;
         [SerializeField] private CellSelection cellSelection;
-
+        private ITileManager _mergedTileManager;
+        
         public void MergeTiles()
         {
             Debug.Log("Merging Tiles!!");
@@ -36,7 +36,7 @@ namespace Core.Merge_Area
                 mergedTileData.ColorGridData.SetColor(i, cellColor);
             }
             
-            mergedTileManager.SetTileData(mergedTileData);
+            _mergedTileManager.SetTileData(mergedTileData);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Core.Merge_Area
 {
-    public abstract class CellButtonState
+    public class CellButtonState
     {
         protected readonly IndividualCellButtonUI Button;
 
@@ -11,28 +11,21 @@ namespace Core.Merge_Area
             Button = button;
         }
         
-        public abstract void OnMouseDown();
-        public abstract void OnMouseOver();
-        public abstract void OnMouseExit();
-        public abstract void OnEnter();
+        public virtual void OnMouseDown(){ }
+        public virtual void OnMouseOver(){ }
+        public virtual void OnMouseExit(){ }
+        public virtual void OnEnter(){ }
     }
 
     public class CellButtonSelectedState : CellButtonState
     {
-        public CellButtonSelectedState(IndividualCellButtonUI button) : base(button)
-        { }
+        public CellButtonSelectedState(IndividualCellButtonUI button) : base(button) { }
         
         public override void OnMouseDown()
         {
             Button.OnCellSelected();
             Button.SetState(new CellButtonNotSelectedState(Button));
         }
-
-        public override void OnMouseOver()
-        { }
-
-        public override  void OnMouseExit()
-        { }
 
         public override void OnEnter()
         {
@@ -42,8 +35,7 @@ namespace Core.Merge_Area
     
     public class CellButtonNotSelectedState : CellButtonState
     {
-        public CellButtonNotSelectedState(IndividualCellButtonUI button) : base(button)
-        { }
+        public CellButtonNotSelectedState(IndividualCellButtonUI button) : base(button) { }
         
         public override  void OnMouseDown()
         {
@@ -56,9 +48,6 @@ namespace Core.Merge_Area
             Button.SetState(new CellButtonHoverState(Button));
         }
 
-        public override  void OnMouseExit()
-        { }
-
         public override void OnEnter()
         {
             Button.SetColor(Button.notSelectedColor);
@@ -67,17 +56,13 @@ namespace Core.Merge_Area
     
     public class CellButtonHoverState : CellButtonState
     {
-        public CellButtonHoverState(IndividualCellButtonUI button) : base(button)
-        { }
+        public CellButtonHoverState(IndividualCellButtonUI button) : base(button) { }
         
         public override  void OnMouseDown()
         {
             Button.OnCellSelected();
             Button.SetState(new CellButtonSelectedState(Button));
         }
-
-        public override void OnMouseOver()
-        { }
 
         public override  void OnMouseExit()
         {

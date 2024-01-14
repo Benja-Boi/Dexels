@@ -429,9 +429,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7688401554012535529}
+  - component: {fileID: 8584434337804691058}
   - component: {fileID: 2000723132574347510}
   - component: {fileID: 5732425200351626121}
-  - component: {fileID: 8584434337804691058}
   - component: {fileID: 1440212298917238696}
   m_Layer: 0
   m_Name: Tile
@@ -458,6 +458,27 @@ Transform:
   - {fileID: 534274061878993130}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8584434337804691058
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4598652979797403263}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.1}
+  m_Center: {x: 0, y: 0, z: -0.05}
 --- !u!114 &2000723132574347510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,29 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8819334dde2b456fbab6892aa505c18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileManager: {fileID: 2000723132574347510}
-  meshRenderer: {fileID: 2991802393363396091}
---- !u!65 &8584434337804691058
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4598652979797403263}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 0.1}
-  m_Center: {x: 0, y: 0, z: -0.05}
+  tileRenderer: {fileID: 2991802393363396091}
 --- !u!114 &1440212298917238696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -518,9 +517,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6583219dec4dc9b0688938315c94c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileManager: {fileID: 2000723132574347510}
-  _draggedTile: {fileID: 0}
-  _originalSlot: {fileID: 0}
+  draggedTile: {fileID: 0}
+  originalSlot: {fileID: 0}
 --- !u!1 &5882035391687308319
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,13 +7,18 @@ namespace Core
 {
     public class DragDropHandler : MonoBehaviour {
         
-        [SerializeField] private TileManager tileManager;
         [SerializeField] private TileData draggedTile;
         [SerializeField] private TileSlot originalSlot;
         
+        private ITileManager _tileManager;
         private Camera _mainCamera;
         private bool _isDragging;
         private Vector3 _offset;
+
+        private void Awake()
+        {
+            _tileManager = GetComponent<ITileManager>();
+        }
 
         private void Start() {
             _mainCamera = Camera.main;
@@ -25,7 +30,6 @@ namespace Core
             OnDrag();
         }
         
-
         private void OnMouseDown()
         {
             Debug.Log("Dragging");
@@ -41,23 +45,23 @@ namespace Core
         private void OnBeginDrag()
         {
             _isDragging = true;
-            _offset = transform.position - GetMouseWorldPos();
+            _offset = transform.position - GetMousePos();
             originalSlot = GetComponentInParent<TileSlot>();
-            draggedTile = tileManager.GetTileData();
+            draggedTile = _tileManager.GetTileData();
         }
 
         private void OnDrag()
         {
-            var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-            transform.position = ray.GetPoint(GetDistanceToCamera()) + _offset;
+            transform.position = _mainCamera.ScreenToWorldPoint(Input.mousePosition) + _offset;
         }
 
         private void OnEndDrag() {
             _isDragging = false;
             var targetSlot = GetTargetSlot();
             // Tile Slot found and is empty
-            if (targetSlot != null && targetSlot != originalSlot && targetSlot.GetComponent<TileSlot>().GetTile() == null)
+            if (targetSlot != null  && targetSlot.GetComponent<TileSlot>().GetTile() == null)
             { 
+                Debug.Log("Tile Slot found and is empty");
                 targetSlot.SetTile(draggedTile);
                 ResetPosition(targetSlot.transform);
             } // Tile Slot not found
@@ -67,20 +71,16 @@ namespace Core
             }
         }
         
-        private Vector3 GetMouseWorldPos() {
-            var mousePoint = Input.mousePosition;
-            mousePoint.z = GetDistanceToCamera();
-            return _mainCamera.ScreenToWorldPoint(mousePoint);
+        private Vector3 GetMousePos() {
+            return _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         }
-
-        private float GetDistanceToCamera() {
-            return Vector3.Distance(transform.position, _mainCamera.transform.position);
-        }
+        
         private TileSlot GetTargetSlot() {
-            var ray = _mainCamera.ScreenPointToRay(GetMouseWorldPos());
+            var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = { };
             Physics.RaycastNonAlloc(ray, hits);
             foreach (var hit in hits) {
+                Debug.Log("Hit!");
                 if (hit.collider.gameObject.CompareTag(Constants.TileSlotTag)) {
                     return hit.collider.gameObject.GetComponent<TileSlot>();
                 }
@@ -90,8 +90,9 @@ namespace Core
 
         private void ResetPosition(Transform slotTransform)
         {
-            transform.parent = slotTransform;
-            transform.position = slotTransform.position;
+            var thisTransform = transform;
+            thisTransform.parent = slotTransform;
+            thisTransform.position = slotTransform.position;
         }
     }
 

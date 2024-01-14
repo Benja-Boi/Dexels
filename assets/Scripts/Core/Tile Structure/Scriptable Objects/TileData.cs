@@ -3,6 +3,18 @@ using UnityEngine;
 
 namespace Core.Tile_Structure.Scriptable_Objects
 {
+    public class TileDataConfig : ScriptableObject
+    {
+        [SerializeField] private ColorGridData colorGridData;
+        [SerializeField] private ColorMap colorMap;
+        [SerializeField] private ColorMap defaultColorMap;
+
+        public TileData Create()
+        {
+            return null;
+        }
+    }
+    
     [CreateAssetMenu(fileName = "New Tile Data", menuName = "Tile Data")]
     public class TileData : ScriptableObject
     {
