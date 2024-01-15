@@ -1,16 +1,14 @@
-using System;
 using Core;
 using Core.Tile_Structure;
-using Core.Tile_Structure.Scriptable_Objects;
 using UnityEngine;
 
 namespace UI
 {
-    public class TilePresenter : MonoBehaviour, Core.Tile_Structure.IObserver<TileData>, ITilePresenter
+    public class TilePresenter : MonoBehaviour, IObserver<Tile>, ITilePresenter
     {
         [SerializeField] private Renderer tileRenderer;
         private ITileManager _tileManager;
-        private TileData _tileData;
+        private Tile _tile;
 
         private void Awake()
         {
@@ -29,18 +27,18 @@ namespace UI
 
         public void FixedUpdate()
         {
-            if (_tileData == null) return;
+            if (_tile == null) return;
             UpdateTexture();
         }
         
-        public void Notify(TileData newTileData)
+        public void Notify(Tile newTile)
         {
-            OnTileDataChanged(newTileData);
+            OnTileDataChanged(newTile);
         }
 
-        private void OnTileDataChanged(TileData tileData)
+        private void OnTileDataChanged(Tile tile)
         {
-            _tileData = tileData;
+            _tile = tile;
         }
         
         private void UpdateTexture()
@@ -54,14 +52,14 @@ namespace UI
 
         private Texture2D GenerateCardTexture()
         {
-            var gridSize = _tileData.GridSize;
+            var gridSize = _tile.GridSize;
             var texture = new Texture2D(gridSize, gridSize);
 
             for (var y = 0; y < gridSize; y++)
             {
                 for (var x = 0; x < gridSize; x++)
                 {
-                    var color = _tileData.GetColor(x, y);
+                    var color = _tile.GetColor(x, y);
                     texture.SetPixel(x, FlipY(y), color);  // Texture coordinates start at bottom left, our 0,0 is top left.
                 }
             }
@@ -72,12 +70,12 @@ namespace UI
 
         private int FlipY(int y)
         {
-            return _tileData.GridSize - 1 - y;
+            return _tile.GridSize - 1 - y;
         }
 
-        public void PresentTile(TileData tileData)
+        public void PresentTile(Tile tile)
         {
-            _tileData = tileData;
+            _tile = tile;
         }
     }
 }

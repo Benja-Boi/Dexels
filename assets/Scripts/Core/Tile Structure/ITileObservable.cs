@@ -8,6 +8,6 @@
     
     public interface IObserver<T>
     {
-        public void Notify(T t);
+        public void Notify(T newTile);
     }
 }

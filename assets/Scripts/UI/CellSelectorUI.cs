@@ -17,12 +17,11 @@ namespace UI
         private TileSlot _tileSlot;
         private BoxCollider _boxCollider;
         private Vector2 _cellSize;
-        private bool _isActive;
 
         private void Awake()
         {
             _boxCollider = GetComponent<BoxCollider>();
-            _tileSlot = GetComponentInParent<TileSlot>();
+            _tileSlot = GetComponent<TileSlot>();
         }
 
         private void Start()
@@ -41,12 +40,23 @@ namespace UI
             SpawnSingleCellSelectors();
         }
 
+        public void Deactivate()
+        {
+            if (_individualCellButtons.Length == 0) return;
+            var selectorsParent = _individualCellButtons[0].transform.parent.gameObject;
+            foreach (var button in _individualCellButtons)
+            {
+                Destroy(button.gameObject);
+            }
+            Destroy(selectorsParent);
+        }
+
         private void SpawnSingleCellSelectors()
         {
             if (_tileSlot.GetTile() == null) return;
             var gridSize = _tileSlot.GetTile().GridSize;
             var selectorsParent = Instantiate(new GameObject(), transform.position, Quaternion.identity,
-                this.gameObject.transform);
+                gameObject.transform);
             var numCells = gridSize * gridSize;
             _individualCellButtons = new IndividualCellButtonUI[numCells];
 

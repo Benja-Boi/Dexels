@@ -4,24 +4,26 @@ using UnityEngine;
 
 namespace Core.Tile_Structure
 {
-    public interface ITileManager : IObservable<TileData>
+    public interface ITileManager : IObservable<Tile>
     {
-        void SetTileData(TileData mergedTileData);
-        TileData GetTileData();
+        void SetTileConfig(TileConfig newTileConfig);
+        void SetTile(Tile newTile);
+        Tile GetTile();
     }
 
     [RequireComponent(typeof(BoxCollider))]
     public class TileManager : MonoBehaviour, ITileManager
     {
-        private readonly List<IObserver<TileData>> _observers = new();
-        [SerializeField] private TileData tileData;
+        [SerializeField] private TileConfig tileConfig;
+        private readonly List<IObserver<Tile>> _observers = new();
+        private Tile _tile;
         private BoxCollider _boxCollider;
 
         public (int, int) WorldToCellCoordinates(Vector3 worldPosition)
         {
             var thisTransform = transform;
             var localPosition = thisTransform.InverseTransformPoint(worldPosition);
-            var cellSize = (_boxCollider.size.x * thisTransform.localScale.x) / tileData.GridSize; // Assume box collider and transform are squares.
+            var cellSize = (_boxCollider.size.x * thisTransform.localScale.x) / _tile.GridSize; // Assume box collider and transform are squares.
 
             var x = Mathf.FloorToInt(localPosition.x / cellSize);
             var y = Mathf.FloorToInt(localPosition.y / cellSize);
@@ -33,8 +35,12 @@ namespace Core.Tile_Structure
         
         private void Awake()
         {
-            NotifyObservers();
+            if (tileConfig != null)
+            {
+                _tile = tileConfig.Create();
+            }
             _boxCollider = GetComponent<BoxCollider>();
+            NotifyObservers();
         }
 
         private void OnValidate()
@@ -44,25 +50,31 @@ namespace Core.Tile_Structure
         
         private void NotifyObservers()
         {
-            if (tileData == null) return;
+            if (_tile == null) return;
             foreach (var observer in _observers)
             {
-                observer.Notify(tileData);
+                observer.Notify(_tile);
             }
         }
-
-        public void SetTileData(TileData newTileData)
+        
+        public void SetTileConfig(TileConfig newTileConfig)
         {
-            tileData = newTileData;
+            tileConfig = newTileConfig;
+            _tile = tileConfig.Create();
+        }
+
+        public void SetTile(Tile newTile)
+        {
+            _tile = newTile;
             NotifyObservers();
         }
 
-        public TileData GetTileData()
+        public Tile GetTile()
         {
-            return tileData;
+            return _tile;
         }
 
-        public void RegisterObserver(IObserver<TileData> observer)
+        public void RegisterObserver(IObserver<Tile> observer)
         {
             if (!_observers.Contains(observer))
             {
@@ -70,7 +82,7 @@ namespace Core.Tile_Structure
             }
         }
 
-        public void UnregisterObserver(IObserver<TileData> observer)
+        public void UnregisterObserver(IObserver<Tile> observer)
         {
             if (_observers.Contains(observer))
             {

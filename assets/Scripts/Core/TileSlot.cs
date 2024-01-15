@@ -1,4 +1,4 @@
-using Core.Tile_Structure.Scriptable_Objects;
+using Core.Tile_Structure;
 using Obvious.Soap;
 using UnityEngine;
 using Utils;
@@ -8,29 +8,30 @@ namespace Core
     [RequireComponent(typeof(Collider))]
     public class TileSlot : MonoBehaviour
     {
-        [SerializeField]
-        private ScriptableEventNoParam onTileDataSet; 
-        [SerializeField] private TileData tileData;
+        [SerializeField] private ScriptableEventNoParam onTileSet; 
+        [SerializeField] private ScriptableEventNoParam onTileRemoved; 
+        private Tile _tile;
 
         private void Awake()
         {
             gameObject.tag = Constants.TileSlotTag;
         }
 
-        public void SetTile(TileData newTileData)
+        public void SetTile(Tile newTile)
         {
-            tileData = newTileData;
-            onTileDataSet.Raise();
+            _tile = newTile;
+            onTileSet.Raise();
         }
     
-        public TileData GetTile()
+        public Tile GetTile()
         {
-            return tileData;
+            return _tile;
         }
         
         public void RemoveTile()
         {
-            tileData = null;
+            _tile = null;
+            onTileRemoved.Raise();
         }
     }
 }

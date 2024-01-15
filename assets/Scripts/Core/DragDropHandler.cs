@@ -1,5 +1,4 @@
 ﻿using Core.Tile_Structure;
-using Core.Tile_Structure.Scriptable_Objects;
 using UnityEngine;
 using Utils;
 
@@ -7,7 +6,7 @@ namespace Core
 {
     public class DragDropHandler : MonoBehaviour {
         
-        [SerializeField] private TileData draggedTile;
+        private Tile _draggedTile;
         [SerializeField] private TileSlot originalSlot;
         
         private ITileManager _tileManager;
@@ -32,10 +31,12 @@ namespace Core
         
         private void OnMouseDown()
         {
+            Debug.Log("OnMouseDown");
             OnBeginDrag();
         }
 
         private void OnMouseUp() {
+            Debug.Log("OnMouseUp");
             if (!_isDragging) return;
             OnEndDrag();
         }
@@ -46,7 +47,8 @@ namespace Core
             _isDragging = true;
             _offset = transform.position - GetMousePos();
             originalSlot = GetComponentInParent<TileSlot>();
-            draggedTile = _tileManager.GetTileData();
+            originalSlot.RemoveTile();
+            _draggedTile = _tileManager.GetTile();
         }
 
         private void OnDrag()
@@ -60,12 +62,11 @@ namespace Core
             // Tile Slot found and is empty
             if (targetSlot != null  && targetSlot.GetComponent<TileSlot>().GetTile() == null)
             {
-                originalSlot.RemoveTile();
-                targetSlot.SetTile(draggedTile);
+                targetSlot.SetTile(_draggedTile);
                 ResetPosition(targetSlot.transform);
             } // Tile Slot not found
             else {
-                originalSlot.SetTile(draggedTile);
+                originalSlot.SetTile(_draggedTile);
                 ResetPosition(originalSlot.transform);
             }
         }
